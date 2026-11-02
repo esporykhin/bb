@@ -1342,6 +1342,16 @@ account, and an approved app can run any `bb` command; `bb mcp clients` lists
 them and `bb mcp revoke <grant-id>` disconnects one. The loopback address needs
 no sign-in and has the same trust as the local `bb` CLI. See the `mcp` skill.
 
+### Personal MCP Hub
+
+В личном форке плагин `personal-plugins/mcp-hub` подключает внешние MCP-инструменты
+ко всем провайдерам через единый реестр. Управление: боковая панель **MCP Hub**,
+`bb mcp-hub --help`, SDK `plugins.callRpc` с `pluginId: "mcp-hub"`.
+Настройка `registry` — секретная JSON-строка, которую ведёт сервис плагина;
+она содержит токены/env и хранится штатным секретным механизмом BB.
+Не копируйте её в логи. Транспорт stdio исполняется на сервере BB.
+Подробности и границы поддержки: [MCP Hub](../personal-plugins/mcp-hub/README.md).
+
 ## Desktop browser cookie discovery
 
 The desktop app discovers Chromium and Firefox cookie stores of registered web

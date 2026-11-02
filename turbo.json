@@ -3,6 +3,17 @@
   "globalEnv": ["BB_BUILD_TOOLCHAIN"],
   "globalPassThroughEnv": ["npm_config_store_dir", "pnpm_config_store_dir"],
   "tasks": {
+    "bb-plugin-mcp-hub#build": {
+      "dependsOn": ["@bb/plugin-build#build", "@get-bb/plugin-sdk#build:types"],
+      "outputs": ["dist/**"]
+    },
+    "bb-plugin-mcp-hub#typecheck": {
+      "dependsOn": ["@get-bb/plugin-sdk#build:types", "topo"]
+    },
+    "bb-plugin-mcp-hub#test": {
+      "dependsOn": ["@get-bb/plugin-sdk#build", "topo"],
+      "env": ["VITEST_MAX_WORKERS"]
+    },
     "@bb/db#db:generate": { "cache": false },
     "@bb/desktop#smoke:browser-broker": {
       "cache": false,

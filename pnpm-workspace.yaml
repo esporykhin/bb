@@ -8,3 +8,4 @@ packages:
   # dependencies are installed into each plugin's own node_modules — plugins
   # bring their own dependencies.
   - "examples/plugins/*"
+  - "personal-plugins/mcp-hub"

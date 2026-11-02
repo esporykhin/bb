@@ -42,6 +42,73 @@ patchedDependencies:
 
 importers:
 
+  personal-plugins/mcp-hub:
+    dependencies:
+      '@modelcontextprotocol/client':
+        specifier: ^2.3.1
+        version: 2.3.1
+      zod:
+        specifier: 4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@bb/plugin-build':
+        specifier: workspace:*
+        version: link:../../packages/plugin-build
+      '@get-bb/plugin-sdk':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sdk
+      '@modelcontextprotocol/server':
+        specifier: ^2.3.1
+        version: 2.3.1
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.10
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.7(@types/react@19.3.0)
+      '@types/better-sqlite3':
+        specifier: ^7.6.12
+        version: 7.6.13
+      better-sqlite3:
+        specifier: 12.10.0
+        version: 12.10.0
+      cron-parser:
+        specifier: ^5.5.0
+        version: 5.10.1
+      hono:
+        specifier: 4.11.9
+        version: 4.11.9
+      react:
+        specifier: ^19.0.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.0(react@19.3.0)
+      tsx:
+        specifier: ^4.23.1
+        version: 4.23.1
+      tsrs:
+        specifier: 0.18.0-ts7.1.0-dev.20260929
+        version: 0.18.0-ts7.1.0-dev.20260929
+      typescript:
+        specifier: npm:@typescript/typescript6@^6.0.2
+        version: '@typescript/typescript6@6.0.2'
+      vitest:
+        specifier: ^4.1.1
+        version: 4.1.1(@opentelemetry/api@1.9.1)(@types/node@24.12.4)(jsdom@29.0.1(@noble/hashes@2.4.0))(msw@2.12.14(@types/node@24.12.4)(@typescript/typescript6@6.0.2))(vite@8.0.12(@types/node@24.12.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.1)(yaml@2.9.1))
+      '@testing-library/react':
+        specifier: ^16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.7(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
+      jsdom:
+        specifier: ^29.0.1
+        version: 29.0.1(@noble/hashes@2.4.0)
+
   .:
     devDependencies:
       '@vitest/coverage-v8':

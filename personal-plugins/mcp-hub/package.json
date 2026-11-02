@@ -1,0 +1,53 @@
+{
+  "name": "bb-plugin-mcp-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "bb": ">=0.48",
+    "bbPluginSdk": ">=0.6.104"
+  },
+  "bb": {
+    "name": "MCP Hub",
+    "description": "Единые MCP-серверы и инструменты для агентов всех провайдеров BB.",
+    "branding": {
+      "icon": "Cloud"
+    },
+    "server": "./src/server.ts",
+    "app": "./src/app.tsx",
+    "skills": [
+      "skills"
+    ]
+  },
+  "scripts": {
+    "build": "node --conditions=source --import tsx build.mjs",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsrs --noEmit",
+    "lint": "oxlint --ignore-pattern node_modules --ignore-pattern dist ."
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "^2.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@bb/plugin-build": "workspace:*",
+    "@get-bb/plugin-sdk": "workspace:*",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/better-sqlite3": "^7.6.12",
+    "better-sqlite3": "12.10.0",
+    "cron-parser": "^5.5.0",
+    "hono": "4.11.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsrs": "0.18.0-ts7.1.0-dev.20260929",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "vitest": "^4.1.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/dom": "^10.4.1",
+    "jsdom": "^29.0.1",
+    "tsx": "^4.23.1"
+  }
+}
