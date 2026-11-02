@@ -125,7 +125,16 @@ function serverInput(draft: Draft): ServerInput {
   }
   if (isKaiten(draft)) {
     const address = draft.kaitenAddress.trim();
-    if (draft.kaitenAddress === draft.originalKaitenAddress)
+    const validOriginalSubdomain = ["KAITEN_SUBDOMAIN", "KAITEN_DOMAIN"].every(
+      (key) => {
+        const value = draft.kaitenAddressEnv[key];
+        return !value || /^[A-Za-z0-9_-]+$/.test(value);
+      },
+    );
+    if (
+      draft.kaitenAddress === draft.originalKaitenAddress &&
+      validOriginalSubdomain
+    )
       Object.assign(env, draft.kaitenAddressEnv);
     else if (address) {
       if (/^[A-Za-z0-9_-]+$/.test(address)) env.KAITEN_SUBDOMAIN = address;
@@ -319,7 +328,7 @@ export function McpHub() {
         const result = await rpc.call("configuration", { id: server.id });
         if (!mounted.current) return;
         const nextDraft = fromConfiguration(result.server);
-        originalConfiguration.current = serverInput(nextDraft);
+        originalConfiguration.current = result.server;
         setDraft(nextDraft);
         setEditing(server.id);
         setFormOpen(true);
@@ -368,7 +377,7 @@ export function McpHub() {
         }
         if (!mounted.current) return;
         const nextDraft = fromConfiguration(persisted);
-        originalConfiguration.current = serverInput(nextDraft);
+        originalConfiguration.current = persisted;
         setDraft(nextDraft);
         setEditing(input.id);
         setDirty(false);

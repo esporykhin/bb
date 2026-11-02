@@ -82,6 +82,91 @@ function setup(initial: ServerInput[]) {
 afterEach(cleanup);
 
 describe("MCP Hub settings", () => {
+  it.each([
+    { key: "KAITEN_SUBDOMAIN", change: "unchanged" },
+    { key: "KAITEN_SUBDOMAIN", change: "token" },
+    { key: "KAITEN_DOMAIN", change: "unchanged" },
+    { key: "KAITEN_DOMAIN", change: "token" },
+  ])(
+    "normalizes a legacy URL in $key on $change save and preserves normalized settings on reopening",
+    async ({ key, change }) => {
+      const original = {
+        ...kaiten,
+        env: {
+          [key]: "https://company.kaiten.ru",
+          KAITEN_TOKEN: "stored-token",
+          OTHER: "preserve",
+        },
+      };
+      const { slot, saved } = setup([original]);
+      await slot.findByRole("heading", { name: "Kaiten" });
+      fireEvent.click(slot.getByRole("button", { name: "Настроить" }));
+      expect(await slot.findByLabelText("Адрес Kaiten")).toHaveProperty(
+        "value",
+        "https://company.kaiten.ru",
+      );
+      if (change === "token")
+        fireEvent.change(slot.getByLabelText("API-токен Kaiten"), {
+          target: { value: "updated-token" },
+        });
+      fireEvent.click(
+        slot.getByRole("button", { name: "Сохранить настройки" }),
+      );
+      const normalized = {
+        OTHER: "preserve",
+        KAITEN_BASE_URL: "https://company.kaiten.ru",
+        KAITEN_TOKEN: change === "token" ? "updated-token" : "stored-token",
+      };
+      await waitFor(() => expect(saved.get("kaiten")?.env).toEqual(normalized));
+      expect(
+        slot.inspection.rpcCalls.filter((call) => call.method === "upsert")[0]
+          ?.input,
+      ).toEqual({
+        id: "kaiten",
+        name: "Kaiten",
+        enabled: true,
+        transport: "stdio",
+        command: kaiten.command,
+        args: kaiten.args,
+        env: normalized,
+      });
+      await waitFor(() =>
+        expect(
+          slot.getByRole("button", { name: "Закрыть настройки" }),
+        ).toHaveProperty("disabled", false),
+      );
+      fireEvent.click(slot.getByRole("button", { name: "Закрыть настройки" }));
+      fireEvent.click(slot.getByRole("button", { name: "Настроить" }));
+      expect(await slot.findByLabelText("Адрес Kaiten")).toHaveProperty(
+        "value",
+        "https://company.kaiten.ru",
+      );
+      expect(slot.getByLabelText("API-токен Kaiten")).toHaveProperty(
+        "value",
+        normalized.KAITEN_TOKEN,
+      );
+      fireEvent.change(slot.getByLabelText("Название"), {
+        target: { value: "Мой Kaiten" },
+      });
+      fireEvent.click(
+        slot.getByRole("button", { name: "Сохранить настройки" }),
+      );
+      await slot.findByRole("heading", { name: "Мой Kaiten" });
+      expect(
+        slot.inspection.rpcCalls.filter((call) => call.method === "upsert")[1]
+          ?.input,
+      ).toEqual({
+        id: "kaiten",
+        name: "Мой Kaiten",
+        enabled: true,
+        transport: "stdio",
+        command: kaiten.command,
+        args: kaiten.args,
+      });
+      expect(saved.get("kaiten")?.env).toEqual(normalized);
+    },
+  );
+
   it("loads and clears a legacy Kaiten address without leaving fallback credentials", async () => {
     const { slot, saved } = setup([
       {
