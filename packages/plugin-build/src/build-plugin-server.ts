@@ -171,7 +171,7 @@ export async function buildPluginServer(
     const runtimeImports = options.runtimeImports ?? {};
     const bundle = await esbuild.build({
       metafile: true,
-      entryPoints: [serverEntry],
+      entryPoints: [await realpath(serverEntry)],
       outfile: stagedJsPath,
       bundle: true,
       format,

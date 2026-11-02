@@ -298,6 +298,51 @@ export default () => [z.string().parse("full"), mini.string().parse("mini")];
     );
   });
 
+  it("builds a plugin registered through a symlink using the canonical entry path", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "bb-plugin-server-symlink-"));
+    tempDirs.push(dir);
+    const realRoot = join(dir, "real");
+    const linkRoot = join(dir, "desktop-link");
+    await mkdir(realRoot);
+    await symlink(realRoot, linkRoot, "dir");
+    await writeFile(
+      join(realRoot, "server.ts"),
+      "export default () => import.meta.filename;\n",
+    );
+
+    const toolchain = await testToolchain();
+    const wrapper = join(dir, "esbuild-wrapper.mjs");
+    await writeFile(
+      wrapper,
+      `import * as esbuild from ${JSON.stringify(toolchain.esbuild)};
+export * from ${JSON.stringify(toolchain.esbuild)};
+export function build(options) {
+  if (options.entryPoints[0] !== ${JSON.stringify(await realpath(join(realRoot, "server.ts")))}) throw new Error("entry is not canonical");
+  return esbuild.build(options);
+}
+`,
+    );
+    const { jsPath } = await buildPluginServer(
+      linkRoot,
+      "0.0.0-test",
+      { ...toolchain, esbuild: pathToFileURL(wrapper).href },
+      {
+        format: "cjs",
+        preserveSourceModuleLocation: true,
+        externalizeSourceOutsideRoot: true,
+        validatedConfig: {
+          serverEntry: join(linkRoot, "server.ts"),
+          packageName: "bb-plugin-symlink-fixture",
+          pluginVersion: "1.0.0",
+        },
+      },
+    );
+    const loaded = createRequire(import.meta.url)(jsPath) as {
+      default: () => string;
+    };
+    expect(loaded.default()).toBe(await realpath(join(realRoot, "server.ts")));
+  });
+
   it("preserves module locations without rewriting source text", async () => {
     const dir = await mkdtemp(join(tmpdir(), "bb-plugin-server-location-"));
     tempDirs.push(dir);
