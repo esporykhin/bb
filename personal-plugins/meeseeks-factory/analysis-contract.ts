@@ -1,0 +1,13 @@
+import { z } from 'zod';
+const uuid=z.string().uuid();
+export const analysisRunSchema=z.object({id:uuid,projectId:uuid,requestId:uuid,revisionId:z.string(),sourcePath:z.string(),bbProjectId:z.string().nullable(),hostId:z.string().nullable(),threadId:z.string().nullable(),state:z.enum(['pending','running','ready','failed','unknown','needs_attention','closed']),error:z.string().nullable(),createdAt:z.string(),updatedAt:z.string(),importedArtifactIds:z.array(uuid),resultReason:z.string().nullable(),instructionsHash:z.string(),contextHash:z.string()});
+export type AnalysisRun=z.infer<typeof analysisRunSchema>;
+export const analysisStartInput=z.object({projectId:uuid,requestId:uuid}).strict();
+export const analysisCloseInput=z.object({projectId:uuid,runId:uuid}).strict();
+export const analysisLookupInput=analysisStartInput;
+export const analysisRunsInput=z.object({projectId:uuid,limit:z.number().int().min(1).max(20).default(20),offset:z.number().int().min(0).max(1_000_000).default(0)}).strict();
+const provenanceSchema=z.object({sourceType:z.enum(['file','user_context','missing_information']),locator:z.string().trim().min(1).max(1500),quoteOrLine:z.string().trim().min(1).max(2000),observedAt:z.string().datetime()}).strict();
+const draftLink=z.object({type:z.string().regex(/^[a-z][a-z0-9_]{0,49}$/),targetId:uuid.optional(),targetKey:z.string().regex(/^[A-Za-z0-9_.-]{1,80}$/).optional()}).strict().refine(link=>Number(!!link.targetId)+Number(!!link.targetKey)===1,'Укажите targetId или targetKey.');
+export const analysisCompleteInput=z.object({runId:uuid,projectId:uuid,revisionId:z.string(),items:z.array(z.object({externalKey:z.string().regex(/^[A-Za-z0-9_.-]{1,80}$/),kind:z.string().min(1).max(80),title:z.string().trim().min(1).max(200),fields:z.record(z.string(),z.string()),links:z.array(draftLink).max(100),provenance:z.array(provenanceSchema).min(1).max(10)}).strict()).max(20),reason:z.string().max(3000).default('')}).strict();
+export type AnalysisComplete=z.infer<typeof analysisCompleteInput>;
+export type AnalysisSnapshot={files:{path:string;hash:string;content:string}[];context:{name:string;mode:string;repository:string;baseline:string}};

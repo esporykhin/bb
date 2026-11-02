@@ -1,0 +1,209 @@
+{
+  "source": "local-import",
+  "files": [
+    {
+      "path": "meeseeks-backlog/SKILL.md",
+      "hash": "67574214e75c464052cb6e45402f4dc6e622e1ffcbc68839affe1d7335aa3577"
+    },
+    {
+      "path": "meeseeks-batch-decompose/SKILL.md",
+      "hash": "139491193cc21c2abbee42630140ef40ede1e33ea2158ecfa09e5ce827c7d5db"
+    },
+    {
+      "path": "meeseeks-batch-decompose/agents/decomposer.md",
+      "hash": "5dedf501ac69b9db5b785fce2759f460bbdba0cb41f7d49c00265705df4fe54d"
+    },
+    {
+      "path": "meeseeks-batch-decompose/scripts/build_patch.py",
+      "hash": "f5e8c59c2ba90e9d827c7b9b5bd2848174b0aff3962165382ad38dc3dda4d3da"
+    },
+    {
+      "path": "meeseeks-batch-decompose/scripts/check_sync.py",
+      "hash": "33439e223d8f09789a6e476b8b3ff2337cab2cae195924e6ff9ec307e5b6b061"
+    },
+    {
+      "path": "meeseeks-batch-decompose/scripts/select_tasks.py",
+      "hash": "addb2acdb7380ae254fbccdff152bba20df148547c9c24bd084cdbc12285cd31"
+    },
+    {
+      "path": "meeseeks-batch-slice/SKILL.md",
+      "hash": "2ab5b3c1bd17c32e1c430cea83867283466a36fc1fc0ae7fde8f174d07fb232c"
+    },
+    {
+      "path": "meeseeks-batch-testcases/SKILL.md",
+      "hash": "88c5a3966d85ef3224c284fd25090cff43ed1092329bea63e4333dd6e4a72ff1"
+    },
+    {
+      "path": "meeseeks-batch-testcases/agents/testcaser.md",
+      "hash": "37afaea29f1a2292f6aba2f8928a0f30108016e25e1f74fd27633398c63bdebe"
+    },
+    {
+      "path": "meeseeks-batch-testcases/scripts/build_patch.py",
+      "hash": "5cc0894b7d0ee4bc509bb28c423102e1ebad1a8c43d04e553313ac53bc783b88"
+    },
+    {
+      "path": "meeseeks-batch-testcases/scripts/check_sync.py",
+      "hash": "552971f924c618879d8b61781438c950f7068adcbb1fc1d2127b40293cb3343c"
+    },
+    {
+      "path": "meeseeks-batch-testcases/scripts/select_chains.py",
+      "hash": "5af733a327dda346b9f3ece30fe58210c2b590e2cc4a6645e34ab4b4fe59e7ec"
+    },
+    {
+      "path": "meeseeks-decompose/SKILL.md",
+      "hash": "c740a8e1c031846087bcce90532087a3e837f337f4f5292450b2450c93863724"
+    },
+    {
+      "path": "meeseeks-delivery-cycle/SKILL.md",
+      "hash": "d68e1ae167bd706edb0423db857f3319ba908faba1581e427d6e0e448c120802"
+    },
+    {
+      "path": "meeseeks-delivery-cycle/agents/implementer.md",
+      "hash": "9d31a5431e7e827ce7f0152ee259b7d15cbb5cfffdf6f1b22b94915e9a664503"
+    },
+    {
+      "path": "meeseeks-delivery-cycle/agents/reviewer.md",
+      "hash": "2648321e08426ad4e3d74590a42dceb11b7e17b7ba5dbd88d4aaf84989261bc9"
+    },
+    {
+      "path": "meeseeks-delivery-cycle/agents/specer.md",
+      "hash": "21f3199e2fc8462e3651ff827d3a7190e76ff65eb7017beda9016c9a9b3a4882"
+    },
+    {
+      "path": "meeseeks-delivery-cycle/scripts/cycle_state.py",
+      "hash": "53e9cef9d1ad355dceb787176b3b40a051782aa2a5e7b8c53fbc1f3989afefb9"
+    },
+    {
+      "path": "meeseeks-diagnose/SKILL.md",
+      "hash": "6f73ddef5e07da670e8ac12a99f2a7b55567da6149948069829734a00df52abc"
+    },
+    {
+      "path": "meeseeks-diagnose-cycle/SKILL.md",
+      "hash": "5af7a56f603c4712993105d491a011d4a3377aea3a8f8d3847210b24521d14e1"
+    },
+    {
+      "path": "meeseeks-fix-spec/SKILL.md",
+      "hash": "1daac6c6e3e8bdd8e5b4c2b12b4c6f1ee3b2838b3dba0e0ef9ded64338113f1f"
+    },
+    {
+      "path": "meeseeks-harden/SKILL.md",
+      "hash": "be20da2ff02f08c3603d12eb45b827b4d774e1bda84efa2731e78067ff0343f6"
+    },
+    {
+      "path": "meeseeks-methodology/SKILL.md",
+      "hash": "9e09af75d3066461f36f159eff14cb9593670d478769649eecbd99496e07c6ac"
+    },
+    {
+      "path": "meeseeks-methodology-page/SKILL.md",
+      "hash": "a4beb866ad659c92f3241ce8fdef9e792043bd630293dd020f65a587bbe246ce"
+    },
+    {
+      "path": "meeseeks-methodology-page/scripts/render.py",
+      "hash": "04b358114dcb528ff8b59a44bf5c1f7588a823bb0527cfac3d7de799b897b258"
+    },
+    {
+      "path": "meeseeks-project-init/SKILL.md",
+      "hash": "b0623bcc38bd5f313374da84bcec645856feb9f400ec02e9570332bebf3d2dd6"
+    },
+    {
+      "path": "meeseeks-review/SKILL.md",
+      "hash": "997124d2387e6b86ae484efbb9d1fc068ec31f53767284e98215f1166936572a"
+    },
+    {
+      "path": "meeseeks-review-cycle/SKILL.md",
+      "hash": "24b4ab1952303bb6e5b7d95aab217cc71690e45f4eb0aabb1c2c664292bf4079"
+    },
+    {
+      "path": "meeseeks-review-cycle/agents/fix-specer.md",
+      "hash": "e2c0769df030c685e30b747e1e721d6fa2be9c3e403530e9d44d82380e8ea784"
+    },
+    {
+      "path": "meeseeks-review-cycle/agents/reviewer.md",
+      "hash": "3949544ebd6db92bd7e33e75eaac808bacc9a6778aff64fd734b713f0dada876"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/envs.txt",
+      "hash": "e5e3609759dfbc8de802ecba9e32686fa65ec4ce6d4acb4922c9b48db11fba68"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/match_prs.py",
+      "hash": "618ccc8c00744b85567d8437c62a122fc8461716a396c0d88b8a5ac6a7b68373"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/new_plan.py",
+      "hash": "7d32540acb9c9d4924d4eac4833766d0e34c65fb0494e47dda2ea9f07cb8b5bb"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/new_tz.py",
+      "hash": "bc3b4126182ce5af63bd9456aa60b4a7d789914f627b30d5f317f7b6201ba18f"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/save_project.py",
+      "hash": "f2f65cd42ca3842f1fcd0097b86beaa58cf7c3d2cf3f2dcd154eb807d7df5fb5"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/slice_context.py",
+      "hash": "a1bf2bbcced75aa09be91b3cf9fba1b9c9b4fc0b0437bffbc30bb725a6c49418"
+    },
+    {
+      "path": "meeseeks-review-cycle/scripts/task.py",
+      "hash": "8fc214f6d5ce7143381a4e3d326dd0bb598e77b016bc3c6aada9b9e6636df23d"
+    },
+    {
+      "path": "meeseeks-slice/SKILL.md",
+      "hash": "a32fa19b272177cdffaba36239163a22419a6298ff1367d869431a0b53467f9f"
+    },
+    {
+      "path": "meeseeks-spec/SKILL.md",
+      "hash": "4c28020503dc87671a8bf17c34c5be56f49fee0530661bd7ad7c2883ac563345"
+    },
+    {
+      "path": "meeseeks-spec/scripts/tz_budget.py",
+      "hash": "332848db790258ff3faa08730ab0cb83e2a2a5e1b14b4ad20452e35c3916f429"
+    },
+    {
+      "path": "meeseeks-spec-cycle/SKILL.md",
+      "hash": "f1ac1efd1fe8b6432764dcfe67b6cb611d3744b2c4d4a4f514729e62645d16ad"
+    },
+    {
+      "path": "meeseeks-spec-cycle/agents/slice-specer.md",
+      "hash": "ead1dd083aa314584af3aa18b62d3562824515bce41d1407676d96c15faa53aa"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/envs.txt",
+      "hash": "e5e3609759dfbc8de802ecba9e32686fa65ec4ce6d4acb4922c9b48db11fba68"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/new_plan.py",
+      "hash": "7d32540acb9c9d4924d4eac4833766d0e34c65fb0494e47dda2ea9f07cb8b5bb"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/new_tz.py",
+      "hash": "bc3b4126182ce5af63bd9456aa60b4a7d789914f627b30d5f317f7b6201ba18f"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/save_project.py",
+      "hash": "f2f65cd42ca3842f1fcd0097b86beaa58cf7c3d2cf3f2dcd154eb807d7df5fb5"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/slice_context.py",
+      "hash": "8c91cf79d6c14935592c553e0e424d653bcdd786a2b7a14d7acc9bb28a197b4c"
+    },
+    {
+      "path": "meeseeks-spec-cycle/scripts/task.py",
+      "hash": "36b3726542105448ebd685865356ee15fd0f8bab5c4865d21412bb3f8ae80e9d"
+    },
+    {
+      "path": "meeseeks-tdd-implementer/SKILL.md",
+      "hash": "6da93da04940a8178ef1b508bd0e576b17f9b96ba50ab04e8e12b89c1579535c"
+    },
+    {
+      "path": "meeseeks-testcases/SKILL.md",
+      "hash": "8b579be046701e4c3ccd393613bab19a8ab7205186a4533a92234bf23b8b32de"
+    },
+    {
+      "path": "meeseeks-triage/SKILL.md",
+      "hash": "ec033a356e9e10cf5ff117c6c3d8577c1aef2acc25153f7050c0a522f5df15f5"
+    }
+  ]
+}

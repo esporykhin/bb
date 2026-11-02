@@ -1,0 +1,14 @@
+# Окружения Mr Meeseeks для имени файла ТЗ.
+# Источник истины — README репозитория nikell28/meeseeks-claude-inbox.
+# Этот файл — его копия для локальной проверки. Расходится — обновляется по README.
+artifacts_service
+correlation_contract
+dev_agent
+identity_client
+identity_service
+nomad_dispatch
+otel_bootstrap
+mr_meeseeks
+task_result_contract
+review_agent
+spec_agent

@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "outDir": ".ui-test-dist",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@get-bb/plugin-sdk/app": [
+        "./node_modules/@get-bb/plugin-sdk/bundled-types/bb-plugin-sdk-app.d.ts"
+      ],
+      "@get-bb/plugin-sdk/testing/app": [
+        "./node_modules/@get-bb/plugin-sdk/bundled-types/bb-plugin-sdk-testing-app.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "tests/native-thread-context.test.tsx"
+  ]
+}

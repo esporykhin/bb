@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": ".test-dist",
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "domain.ts",
+    "tests/**/*.ts"
+  ]
+}
