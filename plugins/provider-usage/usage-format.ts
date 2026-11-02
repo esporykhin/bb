@@ -1,5 +1,7 @@
 export function formatWalletAmount(amount: string): string {
-  return /^-?(?:0+(?:\.0*)?|\.0+)(?:e[+-]?\d+)?$/i.test(amount) ? "0" : amount;
+  if (/^-?(?:0+(?:\.0*)?|\.0+)(?:e[+-]?\d+)?$/i.test(amount)) return "0";
+  if (/e/i.test(amount)) return amount;
+  return amount.replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
 }
 
 export function usageBarColorClass(usedPercent: number): string {

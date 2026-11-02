@@ -253,7 +253,7 @@ describe("account balances", () => {
       planLabel: "Harness account",
       windows: [],
       balances: [
-        { label: "Recharge balance", currency: "USD", amount: "5.00" },
+        { label: "Recharge balance", currency: "USD", amount: "5.00000" },
         { label: "Bonus balance", currency: "CNY", amount: "0E-16" },
       ],
     };
@@ -262,7 +262,7 @@ describe("account balances", () => {
       selectedId: "host",
     });
     expect(html).toContain("Recharge balance");
-    expect(html).toContain("5.00 USD");
+    expect(html).toContain("5 USD");
     expect(html).toContain("Bonus balance");
     expect(html).toContain("0 CNY");
     expect(html).not.toContain("0E-16");
