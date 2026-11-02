@@ -1,5 +1,5 @@
 import { AnalysisService } from './analysis';
-import { analysisStartInput,analysisRunSchema,analysisRunsInput,analysisCloseInput,analysisLookupInput } from './analysis-contract';
+import { analysisStartInput,analysisRunSchema,analysisRunsInput,analysisCloseInput,analysisLookupInput,analysisRecoverInput } from './analysis-contract';
 import { defineRpcContract, type BbPluginApi } from '@get-bb/plugin-sdk';
 import { z } from 'zod';
 import bundle from './methodology/bundle.json';
@@ -16,6 +16,7 @@ export const rpcContract = defineRpcContract({
   analysis_lookup:{input:analysisLookupInput,output:z.object({run:analysisRunSchema.nullable(),activeRun:analysisRunSchema.nullable()})},
   analysis_start:{input:analysisStartInput,output:z.object({run:analysisRunSchema})},
   analysis_runs:{input:analysisRunsInput,output:z.object({entries:z.array(analysisRunSchema),total:z.number(),limit:z.number(),offset:z.number()})},
+  analysis_recover:{input:analysisRecoverInput,output:z.object({run:analysisRunSchema})},
   dashboard_get:{input:dashboardInput,output:dashboardSchema},
   pulse_get:{input:pulseGetInput,output:z.object({pulse:pulseSchema})},
   pulse_update:{input:pulseUpdateInput,output:z.object({pulse:pulseSchema})},
@@ -41,13 +42,14 @@ export default async function plugin(bb: BbPluginApi) {
   const workspace=new WorkspaceStore(bb.storage.database(),store);
   await workspace.recoverProjectAudit();
   await workspace.analysisRecover();
-  const analysis=new AnalysisService(store,workspace,bb.sdk);
+  const analysis=new AnalysisService(store,workspace,bb.sdk,bb.pluginId);
   const changed = <T>(promise: Promise<T>) => promise.then(value => {bb.realtime.publish('factory-changed', {}); return value;});
   bb.rpc.register(rpcContract, {
     factory_thread_context:input=>analysis.context(input),
     analysis_start:input=>changed(analysis.start(input)),
     analysis_runs:input=>analysis.runs(input),
     analysis_lookup:input=>analysis.lookup(input),
+    analysis_recover:input=>changed(analysis.recover(input)),
     analysis_close:input=>changed(analysis.close(input)),
     dashboard_get:input=>workspace.dashboard(input),
     pulse_get:async input=>({pulse:await workspace.pulseGet(input)}),
@@ -84,7 +86,7 @@ export default async function plugin(bb: BbPluginApi) {
     'bb meeseeks-factory workspace get <JSON: projectId, kind?, limit?, offset?>',
     'bb meeseeks-factory workspace targets <JSON: projectId, query?, kind?, limit?, offset?>',
     'bb meeseeks-factory artifact get|history|create|update|remove <JSON>',
-    'bb meeseeks-factory analysis start|list|lookup|close <JSON>',
+    'bb meeseeks-factory analysis start|list|lookup|close|recover <JSON>',
     'bb meeseeks-factory analysis context <threadId>',
     'bb meeseeks-factory analysis complete --file /absolute/path/result.json',
     'bb meeseeks-factory methodology file <JSON: revision, path>',
@@ -92,7 +94,7 @@ export default async function plugin(bb: BbPluginApi) {
   ].join('\n');
   bb.cli.register({
     name:'meeseeks-factory',summary:'Фабрика софта: проекты и версии методологии',
-    commands:[{name:'analysis',summary:'Запуск анализа и атомарный импорт черновиков',usage:'bb meeseeks-factory analysis start|list|lookup|close <JSON> | complete --file <JSON-file>'},{name:'dashboard',summary:'Портфель проектов',usage:'bb meeseeks-factory dashboard get <JSON>'},{name:'pulse',summary:'Ручные цели и показатели проекта',usage:'bb meeseeks-factory pulse get|update <JSON>'},{name:'workspace',summary:'Рабочее пространство и поиск связей',usage:'bb meeseeks-factory workspace get|targets <JSON>'},{name:'artifact',summary:'CRUD записей методологии с CAS',usage:'bb meeseeks-factory artifact get|history|create|update|remove <JSON>'},{name:'projects',summary:'Каталог на диске, карточки проектов и создание',usage:'bb meeseeks-factory projects discover|list|show <id>|create <JSON>'},{name:'methodology',summary:'Текущая ревизия пакета',usage:'bb meeseeks-factory methodology info'}],
+    commands:[{name:'analysis',summary:'Запуск анализа и атомарный импорт черновиков',usage:'bb meeseeks-factory analysis start|list|lookup|close|recover <JSON> | complete --file <JSON-file>'},{name:'dashboard',summary:'Портфель проектов',usage:'bb meeseeks-factory dashboard get <JSON>'},{name:'pulse',summary:'Ручные цели и показатели проекта',usage:'bb meeseeks-factory pulse get|update <JSON>'},{name:'workspace',summary:'Рабочее пространство и поиск связей',usage:'bb meeseeks-factory workspace get|targets <JSON>'},{name:'artifact',summary:'CRUD записей методологии с CAS',usage:'bb meeseeks-factory artifact get|history|create|update|remove <JSON>'},{name:'projects',summary:'Каталог на диске, карточки проектов и создание',usage:'bb meeseeks-factory projects discover|list|show <id>|create <JSON>'},{name:'methodology',summary:'Текущая ревизия пакета',usage:'bb meeseeks-factory methodology info'}],
     async run(argv,ctx) {
       try {
         const [area,action,...args] = argv;
@@ -137,6 +139,7 @@ export default async function plugin(bb: BbPluginApi) {
         else if(area==='analysis'&&action==='context'&&args.length===1)value=await analysis.context({threadId:args[0]});
         else if(area==='analysis'&&action==='lookup'&&args.length===1)value=await analysis.lookup(JSON.parse(args[0]!));
         else if(area==='analysis'&&action==='close'&&args.length===1)value=await changed(analysis.close(JSON.parse(args[0]!)));
+        else if(area==='analysis'&&action==='recover'&&args.length===1)value=await changed(analysis.recover(JSON.parse(args[0]!)));
         else if(area==='analysis'&&action==='complete'&&args.length===2&&args[0]==='--file')value=await changed(analysis.completeFile(args[1]!,ctx));
         else if(area==='methodology'&&action==='file'&&args.length===1){const input=z.object({revision:z.string().regex(/^[a-f0-9]{64}$/),path:z.string().max(300)}).strict().parse(JSON.parse(args[0]!));value=await store.file(input.revision,input.path);}
         else if (area === 'methodology' && action === 'info' && !args.length) {const rev=await store.head(); value={...rev, files:undefined,fileCount:rev.files.length};}
