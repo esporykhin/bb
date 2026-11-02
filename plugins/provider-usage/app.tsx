@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
+  formatWalletAmount,
   formatUsageReset,
   formatUsdCents,
   usageBarColorClass,
@@ -332,7 +333,7 @@ function accountStatusMessage(account: UsageProvider): string | null {
     case undefined:
       return "Usage not reported.";
     case "ok":
-      return usage.windows.length === 0
+      return usage.windows.length === 0 && (usage.balances?.length ?? 0) === 0
         ? "No usage limits reported for this plan."
         : null;
     case "not_installed":
@@ -406,9 +407,22 @@ function AccountUsage({
           {message}
         </p>
       ) : usage?.status === "ok" ? (
-        usage.windows.map((window) => (
-          <UsageWindow key={window.label} window={window} />
-        ))
+        <>
+          {usage.windows.map((window) => (
+            <UsageWindow key={window.label} window={window} />
+          ))}
+          {usage.balances?.map((balance, index) => (
+            <p
+              key={`${balance.label}:${balance.currency}:${index}`}
+              className="col-span-full flex justify-between gap-3 text-2xs text-subtle-foreground"
+            >
+              <span>{balance.label}</span>
+              <span className="tabular-nums text-sidebar-foreground">
+                {formatWalletAmount(balance.amount)} {balance.currency}
+              </span>
+            </p>
+          ))}
+        </>
       ) : null}
     </section>
   );

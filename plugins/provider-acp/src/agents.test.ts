@@ -245,6 +245,37 @@ describe("custom agents that report usage", () => {
     ).toBe(true);
   });
 
+  it("enables usage for an existing custom DeepSeek Harness without changing its launch options", () => {
+    const agent = parse({
+      id: "deepseek",
+      displayName: "DeepSeek Harness",
+      command:
+        "/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh",
+      args: ["--profile", "acp"],
+      env: { DSH_HOME: "/tmp/dsh" },
+    });
+    const definition = customAcpAgentDefinition(agent);
+    expect(acpProviderDeclaration(definition).maintenance?.usage).toBe(true);
+    expect(definition.launch).toMatchObject({
+      command: agent.command,
+      args: agent.args,
+      env: agent.env,
+    });
+  });
+
+  it("respects an explicit usage opt-out for a dsh command", () => {
+    const agent = parse({
+      id: "deepseek",
+      displayName: "DeepSeek Harness",
+      command: "dsh",
+      providerUsage: false,
+    });
+    expect(
+      acpProviderDeclaration(customAcpAgentDefinition(agent)).maintenance
+        ?.usage,
+    ).toBe(false);
+  });
+
   it("stays out of the usage surface by default", () => {
     const agent = parse({
       id: "amp-plain",

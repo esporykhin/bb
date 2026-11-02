@@ -243,3 +243,30 @@ describe("UsageSettingsContent", () => {
     expect(html).not.toContain("0% used");
   });
 });
+
+describe("account balances", () => {
+  it("shows wallet amounts without a fabricated percentage", () => {
+    const provider = account("wallet");
+    provider.usage = {
+      status: "ok",
+      accountEmail: null,
+      planLabel: "Harness account",
+      windows: [],
+      balances: [
+        { label: "Recharge balance", currency: "USD", amount: "5.00" },
+        { label: "Bonus balance", currency: "CNY", amount: "0E-16" },
+      ],
+    };
+    const html = renderContent({
+      machines: [machine("host", [provider])],
+      selectedId: "host",
+    });
+    expect(html).toContain("Recharge balance");
+    expect(html).toContain("5.00 USD");
+    expect(html).toContain("Bonus balance");
+    expect(html).toContain("0 CNY");
+    expect(html).not.toContain("0E-16");
+    expect(html).not.toContain("No usage limits reported");
+    expect(html).not.toContain("% used");
+  });
+});

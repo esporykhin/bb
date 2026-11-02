@@ -1,3 +1,7 @@
+export function formatWalletAmount(amount: string): string {
+  return /^-?(?:0+(?:\.0*)?|\.0+)(?:e[+-]?\d+)?$/i.test(amount) ? "0" : amount;
+}
+
 export function usageBarColorClass(usedPercent: number): string {
   if (usedPercent >= 95) return "bg-destructive";
   if (usedPercent >= 80) return "bg-warning";

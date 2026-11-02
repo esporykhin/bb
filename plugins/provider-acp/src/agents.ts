@@ -1,4 +1,5 @@
 import { z } from "zod";
+import path from "node:path";
 import type { PluginProviderReasoningLevel } from "@get-bb/plugin-sdk";
 import { experimental_acpLaunchSpecSchema } from "@get-bb/plugin-sdk/provider-bridge/acp";
 import type { AcpLaunchSpec } from "@get-bb/plugin-sdk/provider-bridge/acp";
@@ -90,7 +91,11 @@ export function customAcpAgentDefinition(
         ? {}
         : { permissionCli: agent.permissionCli }),
     },
-    ...(agent.providerUsage ? { providerUsage: true } : {}),
+    ...((agent.providerUsage ??
+    (agent.dialect === "deepseek" ||
+      (!agent.dialect && path.basename(agent.command) === "dsh")))
+      ? { providerUsage: true }
+      : {}),
     ...(agent.dialect === undefined ? {} : { dialect: agent.dialect }),
     ...(shipped?.nativeRootsResolver === undefined
       ? {}

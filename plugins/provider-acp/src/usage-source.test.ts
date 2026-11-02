@@ -17,6 +17,9 @@ it("publishes only its own maintenance providers without a display and only meas
       status: "ok" as const,
       accountEmail: "same@example.com",
       planLabel: "Custom subscription",
+      balances: [
+        { label: "Recharge balance", currency: "USD" as const, amount: "5.00" },
+      ],
       windows: [
         { label: "Tokens this month", usedPercent: 42, resetsAt: null },
       ],
@@ -89,6 +92,9 @@ it("publishes only its own maintenance providers without a display and only meas
         status: "ok",
         plan: null,
         planLabel: "Custom subscription",
+        balances: [
+          { label: "Recharge balance", currency: "USD", amount: "5.00" },
+        ],
         windows: [{ kind: "custom", label: "Tokens this month" }],
       },
     });

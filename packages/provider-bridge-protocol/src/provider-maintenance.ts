@@ -73,6 +73,18 @@ export const providerUsageSchema = z.discriminatedUnion("status", [
       accountEmail: z.string().email().nullable(),
       planLabel: z.string().min(1).nullable(),
       windows: z.array(providerUsageWindowSchema),
+      balances: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            currency: z.enum(["USD", "CNY"]),
+            amount: z
+              .string()
+              .regex(/^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i),
+          }),
+        )
+        .max(100)
+        .optional(),
     })
     .passthrough(),
   z.object({ status: z.literal("not_installed") }).passthrough(),

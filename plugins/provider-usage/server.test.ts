@@ -57,6 +57,9 @@ it("lists cheaply, fetches only the selected source/provider, preserves failed m
         status: "ok",
         accountEmail: `${input.resourceId}@example.com`,
         planLabel: null,
+        balances: [
+          { label: "Recharge balance", currency: "USD", amount: "5.00" },
+        ],
         windows: [
           {
             id: "week",
@@ -143,7 +146,13 @@ it("lists cheaply, fetches only the selected source/provider, preserves failed m
       machineIds: ["source:pool"],
       providerIds: ["codex"],
     };
-    await host.harness.behavior.callRpc("getUsage", target);
+    const walletResult = await host.harness.behavior.callRpc(
+      "getUsage",
+      target,
+    );
+    expect(JSON.stringify(walletResult)).toContain(
+      '"balances":[{"label":"Recharge balance","currency":"USD","amount":"5.00"}]',
+    );
     expect(
       rpc.mock.calls
         .filter(([args]) => args.method === usageFetchMethod)

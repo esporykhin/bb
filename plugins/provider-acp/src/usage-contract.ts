@@ -44,6 +44,18 @@ const usageSchema = z.discriminatedUnion("status", [
     status: z.literal("ok"),
     ...accountFields,
     windows: z.array(usageWindowSchema),
+    balances: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          currency: z.enum(["USD", "CNY"]),
+          amount: z
+            .string()
+            .regex(/^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i),
+        }),
+      )
+      .max(100)
+      .optional(),
   }),
   z.object({ status: z.literal("not_installed"), ...accountFields }),
   z.object({ status: z.literal("unauthenticated"), ...accountFields }),

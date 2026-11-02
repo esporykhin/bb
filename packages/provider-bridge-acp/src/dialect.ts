@@ -469,7 +469,13 @@ export const OPENCODE_ACP_DIALECT: AcpDialect = {
   presentModel: presentProviderPrefixedModel,
 };
 
+const DEEPSEEK_ACP_DIALECT: AcpDialect = {
+  ...GENERIC_ACP_DIALECT,
+  id: "deepseek",
+};
+
 const BUILT_IN_DIALECTS: readonly AcpDialect[] = [
+  DEEPSEEK_ACP_DIALECT,
   GENERIC_ACP_DIALECT,
   CURSOR_ACP_DIALECT,
   GROK_ACP_DIALECT,
@@ -494,6 +500,7 @@ export function registerAcpDialect(dialect: AcpDialect): void {
 }
 
 const DIALECT_IDS_BY_COMMAND: Readonly<Record<string, string>> = {
+  dsh: DEEPSEEK_ACP_DIALECT.id,
   "cursor-agent": CURSOR_ACP_DIALECT.id,
   grok: GROK_ACP_DIALECT.id,
   omp: OMP_ACP_DIALECT.id,

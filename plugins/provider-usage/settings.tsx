@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { formatWalletAmount } from "./usage-format.js";
 import type { providerUsageRpcContract, UsageRequest } from "./server.js";
 import {
   emptyUsageMessage,
@@ -220,7 +221,9 @@ function ProviderUsageBlock({
     accountLabel ?? (usage?.status === "ok" ? usage.accountEmail : null);
   const headingId = useId();
   const showsUsageWindows =
-    !isError && usage?.status === "ok" && usage.windows.length > 0;
+    !isError &&
+    usage?.status === "ok" &&
+    (usage.windows.length > 0 || (usage.balances?.length ?? 0) > 0);
 
   return (
     <section
@@ -332,7 +335,7 @@ function ProviderUsageBody({
   }
   switch (usage.status) {
     case "ok":
-      if (usage.windows.length === 0) {
+      if (usage.windows.length === 0 && (usage.balances?.length ?? 0) === 0) {
         return (
           <p className="text-xs text-muted-foreground">
             No usage limits reported for this plan.
@@ -343,6 +346,17 @@ function ProviderUsageBody({
         <div className="space-y-3.5">
           {usage.windows.map((window) => (
             <UsageWindowRow key={window.label} window={window} />
+          ))}
+          {usage.balances?.map((balance, index) => (
+            <div
+              key={`${balance.label}:${balance.currency}:${index}`}
+              className="flex justify-between gap-3 text-xs"
+            >
+              <span>{balance.label}</span>
+              <span className="tabular-nums">
+                {formatWalletAmount(balance.amount)} {balance.currency}
+              </span>
+            </div>
           ))}
         </div>
       );

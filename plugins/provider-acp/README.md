@@ -50,3 +50,12 @@ What lives here:
 
 The kit itself, including the ACP wire schema, the delta translation, the
 per-agent dialects and the bridge process, is `packages/provider-bridge-acp`.
+
+DeepSeek Harness usage: a custom ACP agent launched with `dsh` is detected automatically.
+For wrapper commands, set `dialect: "deepseek"` and `providerUsage: true` in the
+custom agent entry. Its signed-in Harness account grant is read from
+`$DSH_HOME/.credentials.yaml` (default `~/.dsh/.credentials.yaml`) on the target
+machine; only the official `https://platform.deepseek.com` issuer is supported.
+Recharge and bonus wallets are reported separately. API-key balances are not
+Harness account balances. Authentication errors are reported without removing
+or logging the stored grant.

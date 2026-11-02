@@ -69,6 +69,7 @@ function normalizedUsage(
         status: "ok",
         accountEmail: usage.accountEmail || null,
         planLabel: usage.planLabel || null,
+        ...(usage.balances === undefined ? {} : { balances: usage.balances }),
         windows: usage.windows.map((window) => ({
           label: window.label,
           usedPercent: window.usedPercent,

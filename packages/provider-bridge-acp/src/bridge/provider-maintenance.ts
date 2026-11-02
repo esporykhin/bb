@@ -20,6 +20,7 @@ import {
 } from "@bb/provider-bridge-protocol/bridge-kit";
 import { z } from "zod";
 import { readOpenCodeGoUsage } from "./opencode-usage.js";
+import { readDeepSeekAccountUsage } from "./deepseek-usage.js";
 
 const execFileAsync = execHostFile;
 const USAGE_FETCH_TIMEOUT_MS = 15_000;
@@ -400,9 +401,11 @@ export async function getAcpProviderUsage(args: {
   env: NodeJS.ProcessEnv;
 }): Promise<ProviderUsageResult> {
   const readUsage =
-    args.dialectId === "opencode"
-      ? () => readOpenCodeGoUsage(args.env)
-      : args.maintenance?.readUsage;
+    args.dialectId === "deepseek"
+      ? () => readDeepSeekAccountUsage(args.env)
+      : args.dialectId === "opencode"
+        ? () => readOpenCodeGoUsage(args.env)
+        : args.maintenance?.readUsage;
   if (readUsage === undefined) return { supported: false };
   if (
     args.command === null ||

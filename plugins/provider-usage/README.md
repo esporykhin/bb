@@ -47,3 +47,9 @@ explicit enable/disable choices are preserved. Right-click the footer shortcut a
 choose **Hide** to move it into **More**. Settings → Appearance → Sidebar footer
 controls order and visibility for every footer action. The usage settings page
 remains available. These preferences belong to BB, not the plugin.
+
+DeepSeek Harness account balances appear as separate recharge and bonus wallets.
+The host reads the signed-in Harness grant without changing it and queries the
+official DeepSeek Platform. API-key-only balances are not included. The `dsh`
+ACP executable is detected automatically; wrappers may set `dialect: "deepseek"`
+and `providerUsage: true`. Custom platform origins are not supported.
