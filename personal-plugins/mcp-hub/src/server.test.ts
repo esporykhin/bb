@@ -8,7 +8,7 @@ import {
 } from "@get-bb/plugin-sdk/testing";
 import { z } from "zod";
 import plugin from "./server.js";
-import { rpcContract } from "./contract.js";
+import { rpcContract, type ServerInput } from "./contract.js";
 async function rpc<Name extends keyof typeof rpcContract>(
   harness: FakePluginHost["harness"],
   name: Name,
@@ -178,6 +178,133 @@ const httpInput = (url: string) => ({
 });
 
 describe("MCP hub shared registry and tool execution", () => {
+  it.each(["http", "stdio"] as const)(
+    "returns saved %s configuration only on explicit disclosure and persists edits across reload",
+    async (transport) => {
+      const initial: ServerInput =
+        transport === "http"
+          ? {
+              id: "settings",
+              name: "Settings",
+              transport,
+              enabled: false,
+              url: "https://example.invalid/mcp",
+              bearerToken: "saved-http-secret",
+            }
+          : {
+              id: "settings",
+              name: "Settings",
+              transport,
+              enabled: false,
+              command: "node",
+              args: ["server.mjs", "--read-only"],
+              env: {
+                KAITEN_SUBDOMAIN: "workspace",
+                KAITEN_TOKEN: "saved-stdio-secret",
+              },
+            };
+      const original = await host();
+      await rpc(original.harness, "upsert", initial);
+      const before = await rpc(original.harness, "configuration", {
+        id: initial.id,
+      });
+      expect(before).toEqual({ server: initial });
+      const hidden = await original.harness.behavior.runCli([
+        "show",
+        initial.id,
+        "--json",
+      ]);
+      expect(hidden.exitCode).toBe(0);
+      const summary = (await rpc(original.harness, "list", null)).servers[0];
+      expect(JSON.parse(hidden.stdout!)).toEqual({ server: summary });
+      expect(hidden.stdout).not.toContain("saved-http-secret");
+      expect(hidden.stdout).not.toContain("saved-stdio-secret");
+      expect(hidden.stdout).not.toContain("workspace");
+      const revealed = await original.harness.behavior.runCli([
+        "show",
+        initial.id,
+        "--show-secrets",
+        "--json",
+      ]);
+      expect(revealed.exitCode).toBe(0);
+      expect(JSON.parse(revealed.stdout!)).toEqual({ server: initial });
+      before.server.name = "Unsaved";
+      if (before.server.env) before.server.env.KAITEN_TOKEN = "unsaved";
+      if (before.server.args) before.server.args.push("--unsaved");
+      expect(
+        await rpc(original.harness, "configuration", { id: initial.id }),
+      ).toEqual({ server: initial });
+      const metadata =
+        transport === "http"
+          ? {
+              id: initial.id,
+              name: "Renamed",
+              enabled: false,
+              transport,
+              url: initial.url,
+            }
+          : {
+              id: initial.id,
+              name: "Renamed",
+              enabled: false,
+              transport,
+              command: initial.command,
+              args: initial.args,
+            };
+      await rpc(original.harness, "upsert", metadata);
+      expect(
+        await rpc(original.harness, "configuration", { id: initial.id }),
+      ).toEqual({ server: { ...initial, name: "Renamed" } });
+      const reloaded = await original.harness.lifecycle.reload(plugin);
+      cleanups.push(() => reloaded.harness.lifecycle.dispose());
+      expect(
+        await rpc(reloaded.harness, "configuration", { id: initial.id }),
+      ).toEqual({ server: { ...initial, name: "Renamed" } });
+      const edited =
+        transport === "http"
+          ? { ...initial, name: "Edited", bearerToken: "updated-http-secret" }
+          : {
+              ...initial,
+              name: "Edited",
+              env: {
+                KAITEN_SUBDOMAIN: "another-workspace",
+                KAITEN_TOKEN: "updated-stdio-secret",
+                OPTIONAL: "",
+              },
+            };
+      await rpc(reloaded.harness, "upsert", edited);
+      expect(
+        await rpc(reloaded.harness, "configuration", { id: initial.id }),
+      ).toEqual({ server: edited });
+      const cleared =
+        transport === "http"
+          ? { ...edited, bearerToken: "" }
+          : { ...edited, env: {} };
+      await rpc(reloaded.harness, "upsert", cleared);
+      expect(
+        await rpc(reloaded.harness, "configuration", { id: initial.id }),
+      ).toEqual({ server: cleared });
+      const afterClear = (await rpc(reloaded.harness, "list", null)).servers[0];
+      expect(afterClear.hasToken).toBe(false);
+      expect(afterClear.envKeys).toEqual([]);
+      await rpc(reloaded.harness, "remove", { id: initial.id });
+      expect(await rpc(reloaded.harness, "list", null)).toEqual({
+        servers: [],
+      });
+      await expect(
+        rpc(reloaded.harness, "configuration", { id: initial.id }),
+      ).rejects.toThrow("not found");
+      const missing = await reloaded.harness.behavior.runCli([
+        "show",
+        initial.id,
+        "--show-secrets",
+      ]);
+      expect(missing.exitCode).toBe(1);
+      await expect(
+        rpc(reloaded.harness, "configuration", { id: "invalid/id" }),
+      ).rejects.toThrow();
+    },
+  );
   it("persists create/read/update/delete through RPC and CLI without exposing credentials", async () => {
     const upstream = await fixture();
     const { harness } = await host();

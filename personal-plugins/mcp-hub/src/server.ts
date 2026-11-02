@@ -26,6 +26,7 @@ export default async function plugin(bb: BbPluginApi) {
     rpcContract,
     {
       list: () => service.list(),
+      configuration: (input) => service.configuration(input.id),
       upsert: (input) => service.upsert(input),
       remove: (input) => service.remove(input.id),
       inspect: (input, context) =>
@@ -38,7 +39,7 @@ export default async function plugin(bb: BbPluginApi) {
     {
       experimental_discoverable: true,
       experimental_description:
-        "Shared MCP server registry, discovery and execution. Secrets are accepted only by upsert and never returned.",
+        "Shared MCP server registry, discovery and execution. List, discovery and agent tools do not expose connection secrets. The explicit configuration method returns saved credentials to the owner's settings form; call it only when the user requests viewing or editing that server.",
     },
   );
   bb.cli.register(createHubCli(service));

@@ -136,6 +136,10 @@ export const rpcContract = defineRpcContract({
     input: z.null(),
     output: z.object({ servers: z.array(serverSummarySchema) }),
   },
+  configuration: {
+    input: idInput,
+    output: z.object({ server: serverInputSchema }),
+  },
   upsert: {
     input: serverInputSchema,
     output: z.object({ server: serverSummarySchema }),

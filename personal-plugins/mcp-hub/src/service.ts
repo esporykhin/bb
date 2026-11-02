@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   serverInputSchema,
+  serverIdSchema,
   serverSummarySchema,
   toolSummarySchema,
   searchInputSchema,
@@ -73,6 +74,12 @@ export class McpHubService {
     return {
       servers: (await this.registry()).map((server) => this.summary(server)),
     };
+  }
+  async configuration(rawId: string) {
+    const id = serverIdSchema.parse(rawId);
+    const server = (await this.registry()).find((item) => item.id === id);
+    if (!server) throw new HubError("MCP server was not found.");
+    return { server: serverInputSchema.parse(server) };
   }
   async upsert(raw: ServerInput) {
     const input = serverInputSchema.parse(raw);

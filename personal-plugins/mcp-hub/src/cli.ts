@@ -33,6 +33,31 @@ export function createHubCli(service: McpHubService) {
           return output(await service.list());
         },
       }),
+      show: cliCommand({
+        summary:
+          "Show a saved MCP server; secrets are hidden unless explicitly requested",
+        positionals: idPositionals,
+        options: {
+          "show-secrets": {
+            type: "boolean",
+            description:
+              "Explicitly include saved bearer token and environment values in output",
+          },
+          json: jsonOption,
+        },
+        async run(input) {
+          if (input.options["show-secrets"])
+            return output(await service.configuration(input.positionals.id));
+          const server = (await service.list()).servers.find(
+            (item) => item.id === input.positionals.id,
+          );
+          if (!server)
+            throw new PluginCliError("MCP server was not found.", {
+              code: "server_not_found",
+            });
+          return output({ server });
+        },
+      }),
       add: cliCommand({
         summary:
           "Add or update an MCP server. Stdio runs on the BB server machine.",
